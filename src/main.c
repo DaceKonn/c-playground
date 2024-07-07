@@ -1,48 +1,54 @@
-/*
- * ============================================================================
- *
- *       Filename:  main.c
- *
- *    Description:  Main file of the project
- *
- *        Created:  03/24/2016 19:40:56
- *
- *         Author:  Gustavo Pantuza
- *   Organization:  Software Community
- *
- * ============================================================================
- */
-
-
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
+#include "main.h"
 
-#include "args.h"
-#include "colors.h"
+const char HELP[] = "\nThis is C CLI App\n\nIt has two commands:\n\tcommandA\t\tDisplays command A output\n\tcommandB [Name]\t\tSays hello to the Name"; 
 
-
-
-int
-main (int argc, char* argv[])
-{
-
-    /* Read command line options */
-    options_t options;
-    options_parser(argc, argv, &options);
-
-
-#ifdef DEBUG
-    fprintf(stdout, BLUE "Command line options:\n" NO_COLOR);
-    fprintf(stdout, BROWN "help: %d\n" NO_COLOR, options.help);
-    fprintf(stdout, BROWN "version: %d\n" NO_COLOR, options.version);
-    fprintf(stdout, BROWN "use colors: %d\n" NO_COLOR, options.use_colors);
-    fprintf(stdout, BROWN "filename: %s\n" NO_COLOR, options.file_name);
-#endif
-
-
-    /* Do your magic here :) */
-
-
-    return EXIT_SUCCESS;
+int main(int argc, char *argv[]) {
+    printArguments(argc, argv);
+    processCommands(argc, argv);
+    return 0;
 }
 
+void printArguments(int argc, char *argv[])
+{
+    printf("Running C CLI app\n\nArguments passed:\n");
+
+    for (int i = 0; i < argc; i++)
+    {
+        printf("%i : %s\n", i, argv[i]);
+    }
+
+    printf("\n");
+}
+
+void processCommands(int argc, char *argv[])
+{
+    if (argc == 1) {
+        printf("%s\n", HELP);
+    }
+
+    if (strcmp(argv[1], "-h") == 0) {
+        printf("%s\n", HELP);
+    }
+    else if (strcmp(argv[1], "commandA") == 0) {
+        printf("Command A output\n");
+    } else if (strcmp(argv[1], "commandB") == 0) {
+        runCommandB(argc, argv);
+    } else {
+        printf("Unrecognized command\n");
+    }
+
+}
+
+void runCommandB(int argc, char *argv[])
+{
+    printf("Command B ouptut\n");
+
+    if (argc < 3) {
+        printf("Command B takes 1 argument: name\n");
+        return;
+    }
+
+    printf("Hello, %s!\n", argv[2]);
+}
